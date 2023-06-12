@@ -53,6 +53,11 @@ public class PlayerController : MonoBehaviour
         //If we press Jump button enable jump 
         if (Input.GetButtonDown("Jump"))
             Jump();
+
+        if (Input.GetKeyUp(KeyCode.Space) && _rb.velocity.y > 0)
+        {
+            _rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.y / 2);
+        }
     }
 
     void FixedUpdate()
