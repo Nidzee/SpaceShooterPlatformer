@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
+    [SerializeField] PlayerItemCollectorHandler _itemCollectHandler;
+
     [SerializeField] Rigidbody2D _rb;
 
     [SerializeField] float speed = 2;
@@ -117,7 +119,6 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
-            Debug.Log("[###] JUMP TRUE");
             multipleJump = true;
             availableJumps--;
 
@@ -125,8 +126,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("[###] JUMP FALSE");
-
             if(coyoteJump)
             {
                 multipleJump = true;
@@ -183,6 +182,74 @@ public class PlayerController : MonoBehaviour
         #endregion
     } 
 
+
+
+
+
+
+
+
+
+
+
+    // Collision logic
+    public void OnTriggerEnter2D(Collider2D col)
+    {
+        // Collectible item logic
+        if (col.tag == TagConstraintsConfig.COLLECTIBLE_ITEM_TAG)
+        {
+            BasicDropItem itemData = col.gameObject.GetComponent<BasicDropItem>();
+            if (itemData != null)
+            {
+                _itemCollectHandler.CollectItem(itemData);
+            }
+        }
+    
+
+        // // Effect zone logic
+        // if (col.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
+        // {
+        //     BasicEffectZone environment = col.gameObject.GetComponent<BasicEffectZone>();
+        //     if (environment != null)
+        //     {
+        //         _effectsHandler.ApplyEffect(environment.EffectData);
+        //     }
+        // }
+
+
+        // // Interactible zone logic
+        // if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
+        // {
+        //     IInteractible data = col.gameObject.GetComponent<IInteractible>();
+        //     if (data != null)
+        //     {
+        //         _interactionHandler.RegisterInteractible(data);                
+        //     }
+        // }
+    }
+
+    public void OnTriggerExit(Collider col)
+    {
+        // if (col.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
+        // {
+        //     BasicEffectZone environment = col.gameObject.GetComponent<BasicEffectZone>();
+        //     if (environment != null)
+        //     {
+        //         _effectsHandler.RemoveEffect(environment.EffectData);
+        //     }
+        // }
+
+
+        // // Interactible zone logic
+        // if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
+        // {
+        //     IInteractible data = col.gameObject.GetComponent<IInteractible>();
+        //     if (data != null)
+        //     {
+        //         _interactionHandler.UnregisterInteractible(data);                
+        //     }
+        // }
+    }
 
 
 
