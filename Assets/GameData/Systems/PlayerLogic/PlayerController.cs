@@ -174,13 +174,11 @@ public class PlayerController : MonoBehaviour
         //If looking right and clicked left (flip to the left)
         if(facingRight && dir < 0)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
             facingRight = false;
         }
         //If looking left and clicked right (flip to rhe right)
         else if(!facingRight && dir > 0)
         {
-            transform.localScale = new Vector3(1, 1, 1);
             facingRight = true;
         }
 
