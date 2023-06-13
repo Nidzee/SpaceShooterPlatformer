@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] PlayerItemCollectorHandler _itemCollectHandler;
+    [SerializeField] PlayerInteractionHandler _interractionHandler;
 
     [SerializeField] Rigidbody2D _rb;
 
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         availableJumps = totalJumps;
+        _interractionHandler.Reset();
     }
 
     void Update()
@@ -55,10 +57,16 @@ public class PlayerController : MonoBehaviour
         //If we press Jump button enable jump 
         if (Input.GetButtonDown("Jump"))
             Jump();
-
         if (Input.GetKeyUp(KeyCode.Space) && _rb.velocity.y > 0)
         {
             _rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.y / 2);
+        }
+
+        
+        // Try to interract
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _interractionHandler.TryToInteract();
         }
     }
 
@@ -217,18 +225,18 @@ public class PlayerController : MonoBehaviour
         // }
 
 
-        // // Interactible zone logic
-        // if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
-        // {
-        //     IInteractible data = col.gameObject.GetComponent<IInteractible>();
-        //     if (data != null)
-        //     {
-        //         _interactionHandler.RegisterInteractible(data);                
-        //     }
-        // }
+        // Interactible zone logic
+        if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
+        {
+            IInteractible data = col.gameObject.GetComponent<IInteractible>();
+            if (data != null)
+            {
+                _interractionHandler.RegisterInteractible(data);                
+            }
+        }
     }
 
-    public void OnTriggerExit(Collider col)
+    public void OnTriggerExit2D(Collider2D col)
     {
         // if (col.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
         // {
@@ -240,15 +248,15 @@ public class PlayerController : MonoBehaviour
         // }
 
 
-        // // Interactible zone logic
-        // if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
-        // {
-        //     IInteractible data = col.gameObject.GetComponent<IInteractible>();
-        //     if (data != null)
-        //     {
-        //         _interactionHandler.UnregisterInteractible(data);                
-        //     }
-        // }
+        // Interactible zone logic
+        if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
+        {
+            IInteractible data = col.gameObject.GetComponent<IInteractible>();
+            if (data != null)
+            {
+                _interractionHandler.UnregisterInteractible(data);                
+            }
+        }
     }
 
 
