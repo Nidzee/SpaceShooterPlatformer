@@ -6,6 +6,9 @@ TagManager:
   tags:
   - CollectibleItem
   - InteractibleZone
+  - DestructibleUnit
+  - Bullet
+  - Environment
   layers:
   - Default
   - TransparentFX

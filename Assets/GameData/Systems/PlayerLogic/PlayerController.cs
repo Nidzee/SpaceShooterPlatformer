@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
+    [Header("Weapon")]
+    [SerializeField] Weapon _weapon;
+
     [SerializeField] PlayerItemCollectorHandler _itemCollectHandler;
     [SerializeField] PlayerInteractionHandler _interractionHandler;
 
@@ -33,14 +36,31 @@ public class PlayerController : MonoBehaviour
 
 
 
-    void Awake()
+    void Start()
     {
         availableJumps = totalJumps;
         _interractionHandler.Reset();
+        _weapon.SetGunStats();
     }
 
     void Update()
     {
+
+
+        if (Input.GetMouseButton(0))
+        {
+            _weapon.StartShootingContinuesly();
+        } 
+        
+        else if (Input.GetMouseButtonUp(0))
+        {
+            _weapon.StopShootingContinuesly();
+        }
+
+
+
+
+
 
         //Store the horizontal value
         horizontalValue = Input.GetAxisRaw("Horizontal");

@@ -49,8 +49,8 @@ public class LootBag : MonoBehaviour
         foreach (var item in lootToSpawn)
         {
             GameObject lootObject = Instantiate(item.gameObject, transform.position, Quaternion.identity);
-            Vector3 randomDirection = new Vector3(Random.Range(-1, 1), 1f, Random.Range(-1, 1));
-            lootObject.GetComponent<Rigidbody>().AddForce(randomDirection.normalized * 3, ForceMode.Impulse);
+            Vector3 randomDirection = new Vector2(Random.Range(-1, 1), Random.Range(-1, 1));
+            lootObject.GetComponent<Rigidbody2D>().AddForce(randomDirection.normalized * 7, ForceMode2D.Impulse);
         }
     }
 }

@@ -45,6 +45,12 @@ public class DestructibleUnit : AliveUnit, ICanDropItem
 
     void PlayDestroySound()
     {
+        // SKip if sound not provided
+        if (_destroySound == null)
+        {
+            return;
+        }
+
         AudioSource.PlayClipAtPoint(_destroySound, transform.position);
     }
 
