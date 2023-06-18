@@ -2586,7 +2586,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 4
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: b4fef5b8f44fc1e408344083d2a69b95, type: 2}
   m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -3695,11 +3695,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7573419848923497582, guid: 61e0efd3415fb1e4aba48eda120b8ab8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -63.86
+      value: -52.24
       objectReference: {fileID: 0}
     - target: {fileID: 7573419848923497582, guid: 61e0efd3415fb1e4aba48eda120b8ab8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.18
+      value: -6.22
       objectReference: {fileID: 0}
     - target: {fileID: 7573419848923497582, guid: 61e0efd3415fb1e4aba48eda120b8ab8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4960,12 +4960,16 @@ PrefabInstance:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3642823336382171670, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 7.6186104
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642823336382171670, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -56.57
+      value: -55.18
       objectReference: {fileID: 0}
     - target: {fileID: 3642823336382171670, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.2941
+      value: -6.01
       objectReference: {fileID: 0}
     - target: {fileID: 3642823336382171670, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4998,6 +5002,14 @@ PrefabInstance:
     - target: {fileID: 3642823336382171670, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642823336382171673, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
+      propertyPath: m_Drag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3642823336382171673, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
+      propertyPath: m_ForceMagnitude
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 3642823336382171674, guid: b7132f0254c6e7946b30590bc038015c, type: 3}
       propertyPath: m_Name

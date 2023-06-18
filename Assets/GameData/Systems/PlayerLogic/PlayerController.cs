@@ -194,7 +194,6 @@ public class PlayerController : MonoBehaviour
 
     void Move(float dir)
     {
-
         #region Move & Run
         //Set value of x using dir and speed
         float xVal = dir * speed * 100 * Time.fixedDeltaTime;
