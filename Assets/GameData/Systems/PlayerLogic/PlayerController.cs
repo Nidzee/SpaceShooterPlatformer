@@ -8,9 +8,12 @@ public class PlayerController : MonoBehaviour
     [Header("Weapon")]
     [SerializeField] Weapon _weapon;
 
+    [Header("Handlers")]
+    [SerializeField] GrenadeHandler _grenadeHandler;
     [SerializeField] PlayerItemCollectorHandler _itemCollectHandler;
     [SerializeField] PlayerInteractionHandler _interractionHandler;
 
+    [Header("Components config")]
     [SerializeField] Rigidbody2D _rb;
     [SerializeField] Transform _playerContainer;
 
@@ -86,7 +89,21 @@ public class PlayerController : MonoBehaviour
         {
             _interractionHandler.TryToInteract();
         }
+
+        
+        
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            _grenadeHandler.StartForceSet();
+        } 
+        
+        else if (Input.GetKeyUp(KeyCode.G))
+        {
+            _grenadeHandler.ReleaseForceSet();
+        }
+
     }
+
 
     void FixedUpdate()
     {

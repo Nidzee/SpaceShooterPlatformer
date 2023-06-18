@@ -40,7 +40,12 @@ public class DestructibleUnit : AliveUnit, ICanDropItem
     
     public void DropLoot()
     {
-        lootBag?.DropLoot();
+        if (lootBag == null)
+        {
+            return;
+        }
+        
+        lootBag.DropLoot();
     }
 
     void PlayDestroySound()
