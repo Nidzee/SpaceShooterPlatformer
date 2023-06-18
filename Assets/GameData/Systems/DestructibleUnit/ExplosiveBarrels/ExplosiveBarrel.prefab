@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5991914671042438062}
   - component: {fileID: 5991914671042438057}
   - component: {fileID: 5991914671042438056}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ExplosiveBarrel
   m_TagString: DestructibleUnit
   m_Icon: {fileID: 0}
