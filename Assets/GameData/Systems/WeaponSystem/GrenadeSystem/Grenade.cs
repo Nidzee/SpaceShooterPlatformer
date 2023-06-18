@@ -8,7 +8,7 @@ public class Grenade : MonoBehaviour
     [SerializeField] float _lifeTime = 3f;
     [SerializeField] Rigidbody2D _rb;
     [SerializeField] AudioClip _explodeSound;
-    [SerializeField] GrenadeExplosion _explosionPrefab;
+    [SerializeField] Explosion _explosionPrefab;
     
     float _damagePoints;
 

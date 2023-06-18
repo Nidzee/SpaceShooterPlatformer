@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class GrenadeExplosion : MonoBehaviour
+public class Explosion : MonoBehaviour
 {
     [Header("Explosion config")]
     [SerializeField] float _sphereRadius = 2f;

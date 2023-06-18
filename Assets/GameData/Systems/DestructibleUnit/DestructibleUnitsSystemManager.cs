@@ -55,6 +55,7 @@ public enum DestructibleUnitType
 {
     Crate,
     LootBox,
+    ExplosiveBarrel,
 }
 
 [System.Serializable]
