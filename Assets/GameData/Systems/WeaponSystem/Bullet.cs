@@ -7,18 +7,25 @@ public class Bullet : MonoBehaviour
     [SerializeField] float _bulletSpeed;
     [SerializeField] Rigidbody2D _rb;
     
+    float _damagePoints;
 
-    void Start()
+
+
+    public void SetStats(float damagePoints)
     {
-        DelayDestruction();
+        _damagePoints = damagePoints;
     }
 
-    public void LaunchBullet(float emission)
+    public void LaunchBullet()
     {
         Vector3 bulletDirection = transform.right;
 
         _rb.velocity = bulletDirection * _bulletSpeed;
+        
+        DelayDestruction();
     }
+
+
 
     void OnCollisionEnter2D(Collision2D collision) {
 
@@ -27,29 +34,20 @@ public class Bullet : MonoBehaviour
 
         switch (colliderTag)
         {
-            case TagConstraintsConfig.ENVIRONMENT_TAG:
-            DestroyBullet();
-            break;
-            
 
             case TagConstraintsConfig.DESTRUCTIBLE_UNIT_TAG:
-            var data = collision.gameObject.GetComponent<DestructibleUnit>();
+            var data = collision.gameObject.GetComponent<IDamageble>();
             if (data != null)
             {
-                data.TakeDamage(10);
+                data.TakeDamage(_damagePoints);
             }
             DestroyBullet();
             break;
-            
 
-            // case TagConstraintsConfig.ENEMY_TAG:
-            // var enemyData = collision.gameObject.GetComponent<BasicEnemy>();
-            // if (enemyData != null)
-            // {
-            //     enemyData.TakeDamage(10);
-            // }
-            // DestroyBullet();
-            // break;
+
+            default:
+            DestroyBullet();
+            break;
         }
     }
 

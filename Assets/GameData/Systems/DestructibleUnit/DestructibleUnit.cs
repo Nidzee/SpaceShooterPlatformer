@@ -23,7 +23,7 @@ public class DestructibleUnit : AliveUnit, ICanDropItem
         Health = stats.maxHealthPoints;
     }
 
-    public override void TakeDamage(int damagePoints)
+    public override void TakeDamage(float damagePoints)
     {
         if (Health <= 0)
         {

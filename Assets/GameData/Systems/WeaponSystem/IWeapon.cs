@@ -12,7 +12,7 @@ public interface IWeapon
 
 public abstract class Weapon : MonoBehaviour, IWeapon
 {
-    public virtual WeaponType weaponType => throw new System.NotImplementedException();
+    public virtual WeaponType weaponType => WeaponType.None;
 
     public virtual void SetGunStats() {}
     public virtual void StartShootingContinuesly() {}

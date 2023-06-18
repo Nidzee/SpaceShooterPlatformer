@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class AssaultRifle : Weapon
 {
+    [Header("Weapon type")]
     [SerializeField] WeaponType _weaponType;
+    public override WeaponType weaponType => _weaponType;
+
+    [Header("Bullet config")]
     [SerializeField] GameObject _bulletPrefab;
     [SerializeField] Transform _bulletSpawnPoint;
 
@@ -12,12 +16,10 @@ public class AssaultRifle : Weapon
     [SerializeField] AudioSource _audioSource;
     [SerializeField] List<AudioClip> _assaultRifleFireSounds;
 
-    public override WeaponType weaponType => _weaponType;
 
     // Config data
     float _coolDown;
     float _damagePoints;
-    float _emission;
 
     // Private data
     bool _isShootingContinuesly;
@@ -27,9 +29,10 @@ public class AssaultRifle : Weapon
 
     public override void SetGunStats()
     {
-        _coolDown = 0.15f;
-        _damagePoints = 5;
-        _emission = 0.1f;
+        var weaponStats = WeaponSystemManager.Instance.GetWeaponStats(_weaponType , 1, 1);
+
+        _coolDown = weaponStats.cooldown;
+        _damagePoints = weaponStats.damagePoints;
     }
 
     public override void StartShootingContinuesly() => _isShootingContinuesly = true;
@@ -57,7 +60,9 @@ public class AssaultRifle : Weapon
     {
         playShootSound();
         var bullet = Instantiate(_bulletPrefab, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
-        bullet.GetComponent<Bullet>().LaunchBullet(_emission);
+        var bulletCpmponent = bullet.GetComponent<Bullet>();
+        bulletCpmponent.SetStats(_damagePoints);
+        bulletCpmponent.LaunchBullet();
     }
 
 

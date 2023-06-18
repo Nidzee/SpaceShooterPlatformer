@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1162026479671991555}
   - component: {fileID: 1162026479671991615}
   - component: {fileID: 1162026479671991554}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ArmourPack
   m_TagString: CollectibleItem
   m_Icon: {fileID: 0}
