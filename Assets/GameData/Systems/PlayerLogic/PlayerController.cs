@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerInteractionHandler _interractionHandler;
 
     [SerializeField] Rigidbody2D _rb;
+    [SerializeField] Transform _playerContainer;
 
     [SerializeField] float speed = 2;
     [SerializeField] float jumpPower = 5;
@@ -192,11 +193,13 @@ public class PlayerController : MonoBehaviour
         if(facingRight && dir < 0)
         {
             facingRight = false;
+            _playerContainer.Rotate(0f, 180f, 0f);
         }
         //If looking left and clicked right (flip to rhe right)
         else if(!facingRight && dir > 0)
         {
             facingRight = true;
+            _playerContainer.Rotate(0f, 180f, 0f);
         }
 
         //(0 idle , 4 walking , 8 running)
@@ -229,16 +232,6 @@ public class PlayerController : MonoBehaviour
         }
     
 
-        // // Effect zone logic
-        // if (col.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
-        // {
-        //     BasicEffectZone environment = col.gameObject.GetComponent<BasicEffectZone>();
-        //     if (environment != null)
-        //     {
-        //         _effectsHandler.ApplyEffect(environment.EffectData);
-        //     }
-        // }
-
 
         // Interactible zone logic
         if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
@@ -253,16 +246,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D col)
     {
-        // if (col.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
-        // {
-        //     BasicEffectZone environment = col.gameObject.GetComponent<BasicEffectZone>();
-        //     if (environment != null)
-        //     {
-        //         _effectsHandler.RemoveEffect(environment.EffectData);
-        //     }
-        // }
-
-
         // Interactible zone logic
         if (col.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
         {
