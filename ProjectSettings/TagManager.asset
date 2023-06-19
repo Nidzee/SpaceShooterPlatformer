@@ -9,6 +9,7 @@ TagManager:
   - DestructibleUnit
   - Bullet
   - Environment
+  - Ladder
   layers:
   - Default
   - TransparentFX
