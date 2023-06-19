@@ -1,27 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine;
 
 public class InterractibleButton : MonoBehaviour, IInteractible
 {
+    [Header("Button config")]
     [SerializeField] InterractibleButtonType _buttonType;
+    [SerializeField] float _interractCoolDownSeconds;
+    
+    [Header("Sounds config")]
     [SerializeField] AudioClip _interactSound_Success;
     [SerializeField] AudioClip _interactSound_Fail;
 
-    [SerializeField] float _interractCoolDown;
+    // Button press event
+    [HideInInspector] public UnityEvent OnButtonPressed;
     
+    // Data for on-off button-type
     float _currentCoolDown = 0;
-    bool _isActive = false;
-    bool _isCompleted = false;
 
-    public UnityEvent OnButtonPressed;
+    // Data for only-on button-type
+    bool _isButtonPressed = false;
+
+
 
 
     void Start()
     {
-        _isActive = false;
-        _isCompleted = false;
+        _isButtonPressed = false;
+        _currentCoolDown = 0;
     }
 
 
@@ -29,37 +34,50 @@ public class InterractibleButton : MonoBehaviour, IInteractible
     {
         if (_buttonType == InterractibleButtonType.OnlyOn)
         {
-            if (_isCompleted)
-            {
-                Debug.Log("Button was already pressed.");
-                return;
-            } 
-            else
-            {
-                AudioSource.PlayClipAtPoint(_interactSound_Success, transform.position);
-                OnButtonPressed.Invoke();
-                _isCompleted = true;
-            }
-
+            HandleOnlyOnButtonLogic();
+            return;
         }
-        else if (_buttonType == InterractibleButtonType.OnOff)
+        
+        if (_buttonType == InterractibleButtonType.OnOff)
         {
-            if (_currentCoolDown >= 0)
-            {
-                Debug.Log("COOL DOWN IS NOT FINISHED");
-                AudioSource.PlayClipAtPoint(_interactSound_Fail, transform.position);
-                return;
-            }
-
-
-            _isActive = true;
-            _currentCoolDown = _interractCoolDown;
-            AudioSource.PlayClipAtPoint(_interactSound_Success, transform.position);
-            OnButtonPressed.Invoke();
+            HandleOnOffButtonLogic();
+            return;
         }
     }
 
+    void HandleOnlyOnButtonLogic()
+    {
+        // Skip if button was already pressed
+        if (_isButtonPressed)
+        {
+            Debug.Log("Button was already pressed.");
+            return;
+        } 
+        
 
+        _isButtonPressed = true;
+        AudioSource.PlayClipAtPoint(_interactSound_Success, transform.position);
+        OnButtonPressed.Invoke();
+    }
+
+    void HandleOnOffButtonLogic()
+    {
+        // Wait for cool down to trigger click
+        if (_currentCoolDown >= 0)
+        {
+            AudioSource.PlayClipAtPoint(_interactSound_Fail, transform.position);
+            return;
+        }
+
+
+        _currentCoolDown = _interractCoolDownSeconds;
+        AudioSource.PlayClipAtPoint(_interactSound_Success, transform.position);
+        OnButtonPressed.Invoke();
+    }
+
+
+
+    // CoolDown timer logic
     void Update()
     {
         if (_currentCoolDown >= 0)
@@ -69,8 +87,10 @@ public class InterractibleButton : MonoBehaviour, IInteractible
     }
 }
 
+
+
 public enum InterractibleButtonType
 {
-    OnlyOn,
-    OnOff,
+    OnlyOn = 0,
+    OnOff = 1,
 }
