@@ -3,8 +3,13 @@ using LivingBeings.Player.CharacterMovement.MovementStateMachine.States;
 using UI;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : AliveUnit
 {
+
+    [Header("Player Health-Armour config")]
+    [SerializeField] float _healthAmount;
+    [SerializeField] float _armourAmount;
+    
 
     [Header("Controll Buttons")]
     [SerializeField] CustomButton _leftMoveButton = null;
@@ -174,6 +179,9 @@ public class PlayerController : MonoBehaviour
         _interractionHandler.Reset();
         _weapon.SetGunStats();
 
+        Health = _healthAmount;
+        Armour = _armourAmount;
+
 
         // Initialize state machine and states.
         _stateMachine = new StateMachine();
@@ -281,5 +289,45 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         _stateMachine.CurrentState.OnTriggerExit2D(other);
+    }
+
+
+    public override void TakeDamage(float damagePoints)
+    {
+        Debug.Log("[###] PLAYER TAKE DAMAGE: " + damagePoints);
+
+        if (Armour > 0)
+        {
+            if (damagePoints > Armour)
+            {
+                float healthReduce = damagePoints - Armour;
+                Armour = 0;
+                Health -= healthReduce;
+            }
+            else
+            {
+                Armour -= damagePoints;
+            }
+        }
+        else
+        {
+            Health -= damagePoints;
+        }
+
+        
+        Debug.Log("[###] PLAYER HEALTH: " + Health);
+        Debug.Log("[###] PLAYER ARMOUR: " + Armour);
+
+        if (Health <= 0)
+        {
+            Die();
+        }
+
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        Debug.Log("[### PLAYER IS DEAD");
     }
 }

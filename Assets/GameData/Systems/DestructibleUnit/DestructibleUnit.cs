@@ -21,6 +21,7 @@ public class DestructibleUnit : AliveUnit, ICanDropItem
         // Init health data from stats
         DestructibleUnitStats stats = DestructibleUnitsSystemManager.Instance.GetDestructibleUnitStats(_unitType);
         Health = stats.maxHealthPoints;
+        Armour = 0;
     }
 
     public override void TakeDamage(float damagePoints)
