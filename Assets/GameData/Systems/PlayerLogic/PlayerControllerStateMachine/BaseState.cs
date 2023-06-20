@@ -4,15 +4,16 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
 {
     public abstract class BaseState
     {
-        protected CharacterMovement _characterMovement = null;                    // Reference to character movement script.
+        public string StateName;
+        protected PlayerController _characterController = null;                    // Reference to character movement script.
         protected StateMachine _stateMachine = null;                              // Reference to state machine.
         private Vector2 _currentVelocity = Vector2.zero;                          // Current speed of change in characters velocity.
 
 
 
-        protected BaseState(CharacterMovement characterMovement, StateMachine stateMachine)
+        protected BaseState(PlayerController characterMovement, StateMachine stateMachine)
         {
-            _characterMovement = characterMovement;
+            _characterController = characterMovement;
             _stateMachine = stateMachine;
         }
 
@@ -21,24 +22,64 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
         
         public virtual void Exit() {}
 
-        public virtual void OnTriggerEnter2D(Collider2D other){}
+        public virtual void OnTriggerEnter2D(Collider2D other)
+        {
+            // Collectible item logic
+            if (other.tag == TagConstraintsConfig.COLLECTIBLE_ITEM_TAG)
+            {
+                BasicDropItem itemData = other.gameObject.GetComponent<BasicDropItem>();
+                if (itemData != null)
+                {
+                    _characterController.ItemCollectorHandler.CollectItem(itemData);
+                }
+            }
+        
 
-        public virtual void OnTriggerExit2D(Collider2D other) {}
+            // Interactible zone logic
+            if (other.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
+            {
+                Debug.Log("ENTER INTERRACTIBLE");
+                IInteractible data = other.gameObject.GetComponent<IInteractible>();
+                if (data != null)
+                {
+                    _characterController.InterractionHandler.RegisterInteractible(data);                
+                }
+            }
+
+
+            if (other.CompareTag("Ladder"))
+            {
+                _stateMachine.TransitionToState(_characterController.Climbing);
+            }
+        }
+
+        public virtual void OnTriggerExit2D(Collider2D other) 
+        {
+            // Interactible zone logic
+            if (other.tag == TagConstraintsConfig.INTERACTIBLE_ZONE_TAG)
+            {
+                IInteractible data = other.gameObject.GetComponent<IInteractible>();
+                if (data != null)
+                {
+                    _characterController.InterractionHandler.UnregisterInteractible(data);                
+                }
+            }
+        }
 
 
         public virtual void PhysicsUpdate()
         {
-            Vector2 targetVelocity = new Vector2(0, _characterMovement.RigidBody.velocity.y);
-            bool isLeftButtonPressed = _characterMovement.IsLeftButtonPressed;
-            bool isRightButtonPressed = _characterMovement.IsRightButtonPressed;
+            Vector2 targetVelocity = new Vector2(0, _characterController.RigidBody.velocity.y);
+            bool isLeftButtonPressed = _characterController.IsLeftButtonPressed;
+            bool isRightButtonPressed = _characterController.IsRightButtonPressed;
 
             // If player press left movement button and release right movement button.
             if (isLeftButtonPressed && !isRightButtonPressed)
             {
                 // Set tarhet velocity.
-                targetVelocity = new Vector2(-_characterMovement.HorizontalSpeed, _characterMovement.RigidBody.velocity.y);
+                targetVelocity = new Vector2(-_characterController.HorizontalSpeed, _characterController.RigidBody.velocity.y);
 
-                if(_characterMovement.IsFacingRight)
+                if(_characterController.IsFacingRight)
                 {
                     Flip();
                 }
@@ -47,26 +88,27 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
             else if (isRightButtonPressed && !isLeftButtonPressed)
             {
                 // Set tarhet velocity.
-                targetVelocity = new Vector2(_characterMovement.HorizontalSpeed, _characterMovement.RigidBody.velocity.y);
+                targetVelocity = new Vector2(_characterController.HorizontalSpeed, _characterController.RigidBody.velocity.y);
 
-                if(!_characterMovement.IsFacingRight)
+                if(!_characterController.IsFacingRight)
                 {
                     Flip();
                 }
             }
 
+
             // Set smoothed velocity to the character.
-            _characterMovement.RigidBody.velocity = Vector2.SmoothDamp(
-                _characterMovement.RigidBody.velocity,
+            _characterController.RigidBody.velocity = Vector2.SmoothDamp(
+                _characterController.RigidBody.velocity,
                 targetVelocity, ref _currentVelocity,
-                _characterMovement.MovementSmoothing);
+                _characterController.MovementSmoothing);
         }
 
 
         private void Flip()
         {
-            _characterMovement.IsFacingRight = !_characterMovement.IsFacingRight;
-            _characterMovement.VisualsContainer.Rotate(0f, 180f, 0f);
+            _characterController.IsFacingRight = !_characterController.IsFacingRight;
+            _characterController.VisualsContainer.Rotate(0f, 180f, 0f);
         }
     }
 }

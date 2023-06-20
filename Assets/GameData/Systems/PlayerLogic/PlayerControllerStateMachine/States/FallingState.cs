@@ -5,9 +5,9 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 {
     public class FallingState : BaseState
     {
-        public FallingState (CharacterMovement characterMovement, StateMachine stateMachine) : base (characterMovement, stateMachine)
+        public FallingState (PlayerController characterMovement, StateMachine stateMachine) : base (characterMovement, stateMachine)
         {
-
+            StateName = "Falling";
         }
 
 
@@ -15,7 +15,7 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
         {
             base.Enter();
 
-            _characterMovement.StartFallingPosition = _characterMovement.Transform.position;
+            _characterController.StartFallingPosition = _characterController.Transform.position;
 
             // EventSystem.TriggerEvent("OnFall");
         }
@@ -23,16 +23,13 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 
         public override void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Ladder"))
-            {
-                _stateMachine.TransitionToState(_characterMovement.Climbing);
-            }
+            base.OnTriggerEnter2D(other);
         }
 
 
         public override void OnTriggerExit2D(Collider2D other)
         {
-        
+            base.OnTriggerExit2D(other);
         }
 
 
@@ -40,26 +37,26 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
         {
             base.PhysicsUpdate();
             
-            bool isUpButtonPressed = _characterMovement.IsJumpButtonPressed;
+            bool isUpButtonPressed = _characterController.IsJumpButtonPressed;
 
-            _characterMovement.PressButtonTimer -= Time.deltaTime;
+            _characterController.PressButtonTimer -= Time.deltaTime;
 
             if (isUpButtonPressed)
             {
-                _characterMovement.PressButtonTimer = _characterMovement.PressBeforeGroundTime;
+                _characterController.PressButtonTimer = _characterController.PressBeforeGroundTime;
 
-                if (_characterMovement.AfterGroundTouchTimer > 0f)
+                if (_characterController.AfterGroundTouchTimer > 0f)
                 {
-                    _stateMachine.TransitionToState(_characterMovement.Jumping);
+                    _stateMachine.TransitionToState(_characterController.Jumping);
                 }
             }
 
-            if (_characterMovement.SurfaceCheck.IsCharacterIsOnSurface())
+            if (_characterController.SurfaceCheck.IsCharacterIsOnSurface())
             {
-                _stateMachine.TransitionToState(_characterMovement.Landing);
+                _stateMachine.TransitionToState(_characterController.Landing);
             }
 
-            _characterMovement.AfterGroundTouchTimer -= Time.deltaTime;
+            _characterController.AfterGroundTouchTimer -= Time.deltaTime;
         }
 
 

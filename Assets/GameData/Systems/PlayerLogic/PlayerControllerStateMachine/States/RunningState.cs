@@ -4,9 +4,9 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 {
     public class RunningState : BaseState
     {
-        public RunningState (CharacterMovement characterMovement, StateMachine stateMachine) : base (characterMovement, stateMachine)
+        public RunningState (PlayerController characterMovement, StateMachine stateMachine) : base (characterMovement, stateMachine)
         {
-
+            StateName = "Running";
         }
 
 
@@ -20,16 +20,13 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 
         public override void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Ladder"))
-            {
-                _stateMachine.TransitionToState(_characterMovement.Climbing);
-            }
+            base.OnTriggerEnter2D(other);
         }
 
 
         public override void OnTriggerExit2D(Collider2D other)
         {
-        
+            base.OnTriggerExit2D(other);
         }
 
 
@@ -37,31 +34,31 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
         {
             base.PhysicsUpdate();
 
-            bool isStartFalling = _characterMovement.RigidBody.velocity.y < -1f;
-            bool isStopRunning = (_characterMovement.RigidBody.velocity.x < 1f) &&
-                                 (_characterMovement.RigidBody.velocity.x > -1);
-            bool isUpButtonPressed = _characterMovement.IsJumpButtonPressed;
+            bool isStartFalling = _characterController.RigidBody.velocity.y < -1f;
+            bool isStopRunning = (_characterController.RigidBody.velocity.x < 1f) &&
+                                 (_characterController.RigidBody.velocity.x > -1);
+            bool isUpButtonPressed = _characterController.IsJumpButtonPressed;
 
             if (isStartFalling)
             {
-                _stateMachine.TransitionToState(_characterMovement.Falling);
+                _stateMachine.TransitionToState(_characterController.Falling);
             }
 
             if (isStopRunning)
             {
-                _stateMachine.TransitionToState(_characterMovement.Idle);
+                _stateMachine.TransitionToState(_characterController.Idle);
             }
 
             if (isUpButtonPressed)
             {
-                _stateMachine.TransitionToState(_characterMovement.Jumping);
+                _stateMachine.TransitionToState(_characterController.Jumping);
             }
         }
 
 
         public override void Exit()
         {
-            _characterMovement.AfterGroundTouchTimer = _characterMovement.AfterGroundTouchJumpTime;
+            _characterController.AfterGroundTouchTimer = _characterController.AfterGroundTouchJumpTime;
         }
     }
 }

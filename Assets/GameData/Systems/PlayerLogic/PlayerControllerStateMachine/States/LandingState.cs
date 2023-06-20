@@ -4,9 +4,9 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 {
     public class LandingState : BaseState
     {
-        public LandingState (CharacterMovement characterMovement, StateMachine stateMachine) : base (characterMovement, stateMachine)
+        public LandingState (PlayerController characterMovement, StateMachine stateMachine) : base (characterMovement, stateMachine)
         {
-        
+            StateName = "Landing";
         }
 
 
@@ -14,64 +14,61 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
         {
             base.Enter();
             
-            _characterMovement.LandingPosition = _characterMovement.Transform.position;
-            _characterMovement.LastFallHeight = GetLastFallHeight();
+            _characterController.LandingPosition = _characterController.Transform.position;
+            _characterController.LastFallHeight = GetLastFallHeight();
 
             // EventSystem.TriggerEvent("OnLand");
 
-            if (_characterMovement.PressButtonTimer > 0)
+            if (_characterController.PressButtonTimer > 0)
             {
-                _stateMachine.TransitionToState(_characterMovement.Jumping);
+                _stateMachine.TransitionToState(_characterController.Jumping);
             }
         }
 
 
         public override void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Ladder"))
-            {
-                _stateMachine.TransitionToState(_characterMovement.Climbing);
-            }
+            base.OnTriggerEnter2D(other);
         }
 
 
         public override void OnTriggerExit2D(Collider2D other)
         {
-        
+            base.OnTriggerExit2D(other);
         }
 
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            bool isRunning = (_characterMovement.RigidBody.velocity.x < -1f) || (_characterMovement.RigidBody.velocity.x > 1f);
-            bool isUpButtonPressed = _characterMovement.IsJumpButtonPressed;
+            bool isRunning = (_characterController.RigidBody.velocity.x < -1f) || (_characterController.RigidBody.velocity.x > 1f);
+            bool isUpButtonPressed = _characterController.IsJumpButtonPressed;
 
             if (isRunning)
             {
-                _stateMachine.TransitionToState(_characterMovement.Running);
+                _stateMachine.TransitionToState(_characterController.Running);
             }
             else 
             {
-                _stateMachine.TransitionToState(_characterMovement.Idle);   
+                _stateMachine.TransitionToState(_characterController.Idle);   
             }
 
             if (isUpButtonPressed)
             {
-                _stateMachine.TransitionToState(_characterMovement.Jumping);
+                _stateMachine.TransitionToState(_characterController.Jumping);
             }
         }
 
 
         public override void Exit()
         {
-            _characterMovement.AfterGroundTouchTimer = _characterMovement.AfterGroundTouchJumpTime;
+            _characterController.AfterGroundTouchTimer = _characterController.AfterGroundTouchJumpTime;
         }
         
         
         private float GetLastFallHeight()
         {
-            return _characterMovement.StartFallingPosition.y - _characterMovement.LandingPosition.y;
+            return _characterController.StartFallingPosition.y - _characterController.LandingPosition.y;
         }
     }
 }

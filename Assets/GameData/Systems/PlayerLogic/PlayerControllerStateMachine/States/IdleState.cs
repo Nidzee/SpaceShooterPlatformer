@@ -4,8 +4,11 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 {
     public class IdleState : BaseState
     {
-        public IdleState (CharacterMovement characterMovement, StateMachine stateMachine) 
-        : base(characterMovement, stateMachine) {}
+        public IdleState (PlayerController characterMovement, StateMachine stateMachine) 
+        : base(characterMovement, stateMachine) 
+        {
+            StateName = "Idle";
+        }
 
 
 
@@ -18,53 +21,53 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine.States
 
         public override void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Ladder"))
-            {
-                _stateMachine.TransitionToState(_characterMovement.Climbing);
-            }
+            base.OnTriggerEnter2D(other);
         }
 
-        public override void OnTriggerExit2D(Collider2D other) {}
+        public override void OnTriggerExit2D(Collider2D other) 
+        {
+            base.OnTriggerExit2D(other);
+        }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
             
-            bool isStartRunning = (_characterMovement.RigidBody.velocity.x > 1) ||
-                                  (_characterMovement.RigidBody.velocity.x < -1);
-            bool isStartFalling = _characterMovement.RigidBody.velocity.y < -1f;
-            bool isUpButtonPressed = _characterMovement.IsJumpButtonPressed;
+            bool isStartRunning = (_characterController.RigidBody.velocity.x > 1) ||
+                                  (_characterController.RigidBody.velocity.x < -1);
+            bool isStartFalling = _characterController.RigidBody.velocity.y < -1f;
+            bool isUpButtonPressed = _characterController.IsJumpButtonPressed;
 
-            if (_characterMovement.SurfaceCheck.IsCharacterIsOnInclinedSurface())
+            if (_characterController.SurfaceCheck.IsCharacterIsOnInclinedSurface())
             {
-                _characterMovement.RigidBody.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                _characterController.RigidBody.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             }
             else
             {
-                _characterMovement.RigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+                _characterController.RigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
 
             if (isStartFalling)
             {
-                _stateMachine.TransitionToState(_characterMovement.Falling);
+                _stateMachine.TransitionToState(_characterController.Falling);
             }
 
             if (isStartRunning)
             {
-                _stateMachine.TransitionToState(_characterMovement.Running);
+                _stateMachine.TransitionToState(_characterController.Running);
             }
 
             if (isUpButtonPressed)
             {
-                _stateMachine.TransitionToState(_characterMovement.Jumping);
+                _stateMachine.TransitionToState(_characterController.Jumping);
             }
         }
 
 
         public override void Exit()
         {
-            _characterMovement.AfterGroundTouchTimer = _characterMovement.AfterGroundTouchJumpTime;
-            _characterMovement.RigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            _characterController.AfterGroundTouchTimer = _characterController.AfterGroundTouchJumpTime;
+            _characterController.RigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
     }
 } 
