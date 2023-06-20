@@ -17,6 +17,11 @@ public class PlayerItemCollectorHandler : MonoBehaviour
 
 
 
+    public void Reset()
+    {
+        
+    }
+
     public void CollectItem(BasicDropItem dropItem)
     {
         var dropItemType = dropItem.ItemType;

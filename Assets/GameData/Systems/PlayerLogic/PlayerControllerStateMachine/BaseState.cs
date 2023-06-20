@@ -46,6 +46,19 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
                 }
             }
 
+            
+            // Effect zone logic
+            if (other.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
+            {
+                BasicEffectZone environment = other.gameObject.GetComponent<BasicEffectZone>();
+                if (environment != null)
+                {
+                    _characterController.PlayerEffectsHandler.ApplyEffect(environment.EffectData);
+                }
+            }
+
+
+
 
             if (other.CompareTag("Ladder"))
             {
@@ -62,6 +75,16 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
                 if (data != null)
                 {
                     _characterController.InterractionHandler.UnregisterInteractible(data);                
+                }
+            }
+
+            
+            if (other.tag == TagConstraintsConfig.EFFECT_ZONE_TAG)
+            {
+                BasicEffectZone environment = other.gameObject.GetComponent<BasicEffectZone>();
+                if (environment != null)
+                {
+                    _characterController.PlayerEffectsHandler.RemoveEffect(environment.EffectData);
                 }
             }
         }

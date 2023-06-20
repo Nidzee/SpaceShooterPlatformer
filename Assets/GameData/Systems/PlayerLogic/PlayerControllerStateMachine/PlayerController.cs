@@ -31,6 +31,8 @@ public class PlayerController : AliveUnit
     public PlayerItemCollectorHandler ItemCollectorHandler => _itemCollectHandler;
     [SerializeField] PlayerInteractionHandler _interractionHandler;
     public PlayerInteractionHandler InterractionHandler => _interractionHandler;
+    [SerializeField] PlayerEffectsHandler _playerEffectsHandler;
+    public PlayerEffectsHandler PlayerEffectsHandler => _playerEffectsHandler;
 
 
 
@@ -176,8 +178,10 @@ public class PlayerController : AliveUnit
         _rigidBody = gameObject.GetComponent<Rigidbody2D>();
 
 
-        _interractionHandler.Reset();
         _weapon.SetGunStats();
+        _playerEffectsHandler.Reset();
+        _itemCollectHandler.Reset();
+        _interractionHandler.Reset();
 
         Health = _healthAmount;
         Armour = _armourAmount;
