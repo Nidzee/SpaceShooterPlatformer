@@ -1,227 +1,89 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+
+
+public enum LaserObstacleType
+{
+    Infinite,
+    FireSleep,
+}
 
 public class LaserObstacle : MonoBehaviour
 {
-    [SerializeField] private float _damage = 0f;                                     // How many damage lazer will apply.
-    [Space]
-    [SerializeField] private bool _isLazerPersistent = false;                        // Determine if lazer works without stops.
-    [SerializeField] private float _delayBeforeFirstShot = 0f;                       // How much time must pass before first shot.
-    [SerializeField] private float _shootingTime = 0f;                               // How long lazer can shoot per one time.
-    [SerializeField] private float _restingTime = 0f;                                // How long lazer rest after each shoot.
-    [Space]
-    [SerializeField] private GameObject _fireFromPoint = null;                           // Point from which lazer is shooting.
-    [SerializeField] private GameObject _fireToPoint = null;                           // Point from which lazer is shooting.
-    [SerializeField] private GameObject _lazerStart = null;                          // Start lazer gameObject that contains start lazer sprite.
-    [SerializeField] private GameObject _lazerMiddle = null;                         // Middle lazer gameObject that contains middle lazer sprit.
-    [SerializeField] private GameObject _lazerEnd = null;                            // End lazer gameObject that contains end lazer sprite.
-    [Space]
-    [SerializeField] private float _maxLazerLength = 1f;                             // Length of the lazer.
-    [SerializeField] private LayerMask _interactabelWithLazer = Physics2D.AllLayers; // Determine what can be damaged by lazer.
-    [SerializeField] private LayerMask _hittableByLazer = Physics2D.AllLayers;       // Determine what can be damaged by bullet.
-    [Space]
-    [SerializeField] private float _middleLazerScaleFixer = 0f;                      // Used to provide seamless connection between middle lazer and start lazer parts. Need when rotating a lazer.            
-    
-    private bool _isLazerActive = false;                                             // Check if lazer is active now.
-    private float _shootTimer = 0f;                                                  // Timer that control how long lazer will shot.
-    private float _restTimer = 0f;                                                   // Timer that control how long lazer will rest after each shoot.
-    private float _firstShotDelayTimer = 0;                                          // Timer that control how long lazer will wait before performing shot for the first time.
-    private float _currentLazerLength = 1f;                                          // Current length of the lazer.
-    private float _startSpriteWidth = 0f;                                            // Start lazer sprite length.
-    private SpriteRenderer _startSpriteRenderer = null;                              // SpriteRenderer component of the start lazer sparite.
+    [SerializeField] LaserObstacleType _laserType;
 
-    /*
-        This is the minimum distance that must be
-        between character and another object for that
-        the lazer doesn`t go inside itself. 
-        When that distances is already reached we
-        turn off particular lazer object.
-    */
-    private float _middleMinDistance = 0.85f;                                        // When that distance is reached we turn off middle lazer.
-    private float _startMinDistance = 0.55f;                                         // When that distance is reached we turn off start lazer.
-    
+    [SerializeField] LineRenderer _lineRenderer;
+    [SerializeField] Transform _startPoint;
+    [SerializeField] float _maxRayDistance;
 
-    private void Start()
+    [Header("Visuals")]
+    [SerializeField] Transform _startLaser;
+    [SerializeField] Transform _finishLaser;
+
+    [SerializeField] float _fireDuration;
+    [SerializeField] float _sleepDuration;
+    float _sleepTimer;
+    float _fireTimer;
+
+
+
+    public void Update()
     {
-        _startSpriteRenderer = _lazerStart.gameObject.GetComponent<SpriteRenderer>();
-        _currentLazerLength = _maxLazerLength;
-        
-        // Initialize timers.
-        _firstShotDelayTimer = _delayBeforeFirstShot;
-        _shootTimer = _shootingTime;
-    }
-
-
-    private void Update()
-    {
-        // If time before first shoot has passed.
-        if (_firstShotDelayTimer > 0)
+        if (_laserType == LaserObstacleType.Infinite)
         {
-            _firstShotDelayTimer -= Time.deltaTime;
+            LaunchRay();
+            return;
         }
-        // If lazer didn`t perform it`s first shoot decrease delay timer.
-        else
+
+
+        if (_sleepTimer > 0)
         {
-            // If rest time has passed, now we can shoot.
-            if (_restTimer <= 0)
-            {
-                // If shoot time hasn`t passed we still shooting.
-                if (_shootTimer >= 0)
-                {
-                    if (!_isLazerPersistent)
-                    {
-                        _shootTimer -= Time.deltaTime;
-                    }
-
-
-
-
-                    _isLazerActive = true;
-
-
-
-
-                    RaycastHit2D ray = ThrowRaycast();
-                    CalculateLazerLength(ray);
-                    Debug.DrawRay(_fireFromPoint.transform.position, _fireToPoint.transform.position, Color.green);
-
-
-
-                    
-                    InitializeStartLazerPart();
-                    ActivateLazerPart(_lazerStart);
-                    
-
-
-
-
-
-                    if (IsFarEnoughToObject(_middleMinDistance))
-                    {
-                        InitializeMiddlePart();
-                        ActivateLazerPart(_lazerMiddle);
-                    }
-                    else
-                    {
-                        DeactivateLazerPart(_lazerMiddle);
-                    }
-
-
-                    InitializeEndPart();
-                    ActivateLazerPart(_lazerEnd);
-
-                    // if (IsRayCanApplyDamageTo(ray.collider.gameObject))
-                    // {
-                    //     ApplyDamageTo(ray.collider.gameObject, ray.point);
-                    // }
-                }
-                // If shoot time has passed reset shoot timer and rest timer.
-                else
-                {
-                    _restTimer = _restingTime;
-                }
-            }
-            // If lazer still have a rest decrease rest timer.
-            else
-            {
-                if (_isLazerActive)
-                {
-                    _isLazerActive = false;
-                    _shootTimer = _shootingTime;
-
-                    DeactivateLazerPart(_lazerStart);
-                    DeactivateLazerPart(_lazerMiddle);
-                    DeactivateLazerPart(_lazerEnd);
-                }
-
-                _restTimer -= Time.deltaTime;
-            }
+            _sleepTimer -=Time.deltaTime;
+            return;
         }
-    }
 
 
-    private void InitializeStartLazerPart()
-    {
-        _startSpriteWidth = _startSpriteRenderer.bounds.size.x;
-        _lazerStart.transform.localPosition = _fireFromPoint.transform.position;
-    }
-
-
-    private void InitializeMiddlePart()
-    {
-        Vector3 midleLocalScale = _lazerMiddle.transform.localScale;
-        _lazerMiddle.transform.localScale = new Vector3((_currentLazerLength - _startSpriteWidth) + _middleLazerScaleFixer,
-            midleLocalScale.y,
-            midleLocalScale.z);
-        _lazerMiddle.transform.localPosition = new Vector2((_currentLazerLength/2), 0f);
-    }
-
-
-    private void InitializeEndPart()
-    {
-        float offset = 0.5f;           // This offset is needed for the end sprite is placed in properly position.
-        _lazerEnd.transform.localPosition = new Vector2(_currentLazerLength - offset, 0f);
-    }
-
-
-    private void ActivateLazerPart(GameObject lazerPart)
-    {
-        lazerPart.SetActive(true);   
-    }
-
-
-    private void DeactivateLazerPart(GameObject lazerPart)
-    {
-        lazerPart.SetActive(false);  
-    }
-
-
-    private RaycastHit2D ThrowRaycast()
-    {
-        return Physics2D.Raycast(_fireFromPoint.transform.position, _fireToPoint.transform.right, _maxLazerLength, _interactabelWithLazer);
-    }
-
-
-    private void CalculateLazerLength(RaycastHit2D ray)
-    {
-        if (IsRayCollideSomething(ray))
+        if (_fireTimer > 0)
         {
-            _currentLazerLength = Vector2.Distance(ray.point, _fireFromPoint.transform.position);
+            LaunchRay();
+            _fireTimer -= Time.deltaTime;
         }
         else
         {
-            _currentLazerLength = _maxLazerLength;
+            DeactivateLaser();
+            _sleepTimer = _sleepDuration;
+            _fireTimer = _fireDuration;
         }
     }
-    
-    
-    private void ApplyDamageTo(GameObject collidedObject, Vector2 hitPosition)
+
+    void LaunchRay()
     {
-        // bool isComponentExist = false;
-        // isComponentExist = collidedObject.TryGetComponent<Health>(out var health);
-        
-        // if (isComponentExist)
-        // {
-        //     health.TakeDamage(_damage);
-        // }
+
+        RaycastHit2D hit = Physics2D.Raycast(_startPoint.position, _startPoint.right, _maxRayDistance);
+
+        if (hit.collider != null)
+        {
+            _startLaser.gameObject.SetActive(true);
+            _finishLaser.gameObject.SetActive(true);
+
+            _startLaser.transform.position = _startPoint.transform.position;
+            _finishLaser.transform.position = hit.point;
+
+            _lineRenderer.enabled = true;
+            _lineRenderer.SetPosition(0, _startPoint.position);
+            _lineRenderer.SetPosition(1, hit.point);
+        }
+        else
+        {
+            DeactivateLaser();
+        }
     }
-    
 
-    private bool IsRayCollideSomething(RaycastHit2D ray)
+    void DeactivateLaser()
     {
-        return ray.collider != null;
-    }
-
-
-    private bool IsFarEnoughToObject(float distance)
-    {
-        return _currentLazerLength >= distance;
-    }
-
-
-    private bool IsRayCanApplyDamageTo(GameObject collidedObject)
-    {
-        return ((1 << collidedObject.gameObject.layer) & _hittableByLazer) != 0;
+        _lineRenderer.enabled = false;
+        _startLaser.gameObject.SetActive(false);
+        _finishLaser.gameObject.SetActive(false);
     }
 }
