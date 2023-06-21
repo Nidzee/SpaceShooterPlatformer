@@ -296,10 +296,42 @@ public class PlayerController : AliveUnit
     }
 
 
+    
+    public override void TakeDamage(float damagePoints, DamageType damageType)
+    {
+        if (damageType == DamageType.ReduceAll)
+        {
+            TakeDamage(damagePoints);
+            return;
+        }
+
+        if (damageType == DamageType.ReduceHealthOnly)
+        {
+            Health -= damagePoints;
+            if (Health <= 0)
+            {
+                Die();
+            }
+            return;
+        }
+
+        if (damageType == DamageType.ReduceArmourOnly)
+        {
+            if (Armour <= 0)
+            {
+                return;
+            }
+
+            Armour -= damagePoints;
+            if (Armour < 0)
+            {
+                Armour = 0;
+            }
+        }
+    }
+
     public override void TakeDamage(float damagePoints)
     {
-        Debug.Log("[###] PLAYER TAKE DAMAGE: " + damagePoints);
-
         if (Armour > 0)
         {
             if (damagePoints > Armour)
@@ -318,20 +350,15 @@ public class PlayerController : AliveUnit
             Health -= damagePoints;
         }
 
-        
-        Debug.Log("[###] PLAYER HEALTH: " + Health);
-        Debug.Log("[###] PLAYER ARMOUR: " + Armour);
-
         if (Health <= 0)
         {
             Die();
         }
-
     }
 
     public override void Die()
     {
         base.Die();
-        Debug.Log("[### PLAYER IS DEAD");
+        Debug.Log("[###] PLAYER IS DEAD");
     }
 }

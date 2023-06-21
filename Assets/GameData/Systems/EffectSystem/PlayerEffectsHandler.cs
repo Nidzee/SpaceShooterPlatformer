@@ -108,7 +108,7 @@ public class PlayerEffectsHandler : MonoBehaviour
     {
         while(IsEffectOnPlayer(effectData.EffectType))
         {
-            _player.TakeDamage(effectData.EffectStats.DamagePoints);
+            _player.TakeDamage(effectData.EffectStats.DamagePoints, effectData.EffectStats.DamageType);
             await Task.Delay(effectData.EffectStats.DamageIntervas_Miliseconds);
         }
     }

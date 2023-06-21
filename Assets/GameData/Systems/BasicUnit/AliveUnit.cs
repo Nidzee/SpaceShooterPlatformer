@@ -8,5 +8,6 @@ public abstract class AliveUnit : MonoBehaviour, IDamageble
     [HideInInspector] public float Armour;
 
     public virtual void Die() {}
-    public virtual void TakeDamage(float damagePoints) {} // Add damage type and add damage-multiplyer for enemy-stats
+    public virtual void TakeDamage(float damagePoints) {}
+    public virtual void TakeDamage(float damagePoints, DamageType gamageType) {}
 }
