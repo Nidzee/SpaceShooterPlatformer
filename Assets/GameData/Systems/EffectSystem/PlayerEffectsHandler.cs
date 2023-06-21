@@ -9,23 +9,21 @@ using System.Linq;
 public class EffectDisplayData
 {
     public EffectType EnvironmnentType;
-    public GameObject ParticleObject;
     public GameObject Icon;
 }
-
 
 public class PlayerEffectsHandler : MonoBehaviour
 {
     [SerializeField] List<EffectDisplayData> _availableEffects;
     [SerializeField] PlayerController _player;
 
-    List<EffectData> _effectsOnPlayer;
+    Dictionary<EffectType, List<BasicEffectZone>> _effectsOnPlayer;
 
 
     public void Reset()
     {
         // Clear list of current effects
-        _effectsOnPlayer = new List<EffectData>();
+        _effectsOnPlayer = new Dictionary<EffectType, List<BasicEffectZone>>();
         
         // Deactivate all particles
         DeactivateAllParticles();
@@ -39,42 +37,70 @@ public class PlayerEffectsHandler : MonoBehaviour
 
 
 
-    public void ApplyEffect(EffectData effectData)
+    public void ApplyEffect(BasicEffectZone effectZone)
     {
-        // Check if effect is already on player
-        var effectDataOnPlayer = _effectsOnPlayer.FirstOrDefault(i => i.EffectType == effectData.EffectType);
-        if (effectDataOnPlayer != null)
+        // Check if effect is on player
+        if (_effectsOnPlayer.TryGetValue(effectZone.EffectData.EffectType, out var zonesCollection))
         {
-            Debug.Log("Effect: " + effectData.EffectType + " is already on player.");
-            return;
+
+            // Check if this zone is on player
+            if (zonesCollection.Contains(effectZone))
+            {
+                Debug.Log("This effect zone is already in dictionary");
+                return;
+            }
+            else
+            {
+                Debug.Log("Add another same zone");
+                zonesCollection.Add(effectZone);
+            }
         }
 
-
-        // Add efect to player effects container
-        _effectsOnPlayer.Add(effectData);
-
-        // Try to activate particles
-        UpdateEffectParticle(effectData.EffectType, true);
-
-        // Start apply damage logic
-        ApplyEffectDamageLogic(effectData);
-    }
-
-    public void RemoveEffect(EffectData effectData)
-    {
-        var effetOnPlayerData = _effectsOnPlayer.FirstOrDefault(i => i.EffectType == effectData.EffectType);
-        
-        if (effetOnPlayerData != null)
-        {
-            Debug.Log("Remove effect: " + effetOnPlayerData.EffectType);
-            UpdateEffectParticle(effetOnPlayerData.EffectType, false);
-            _effectsOnPlayer.Remove(effetOnPlayerData);
-        }
+        // If not on player -> add to dictionary and launch damage
         else
         {
-            Debug.Log("Trying to remove effect: " + effectData.EffectType + " which is not on player.");
+            _effectsOnPlayer[effectZone.EffectData.EffectType] = new List<BasicEffectZone>();
+            _effectsOnPlayer[effectZone.EffectData.EffectType].Add(effectZone);
+            ApplyEffectDamageLogic(effectZone.EffectData);
+            UpdateEffectParticle(effectZone.EffectData.EffectType, true);
         }
     }
+
+
+
+
+    public void RemoveEffect(BasicEffectZone effectZone)
+    {
+        // Check if effect is on player
+        if (_effectsOnPlayer.TryGetValue(effectZone.EffectData.EffectType, out var zonesCollection))
+        {
+            
+            // Check if this zone is on player
+            if (zonesCollection.Contains(effectZone))
+            {
+                zonesCollection.Remove(effectZone);
+
+                if (zonesCollection.Count <= 0)
+                {
+                    UpdateEffectParticle(effectZone.EffectData.EffectType, false);
+                    _effectsOnPlayer.Remove(effectZone.EffectData.EffectType);
+                }
+            }
+            else
+            {
+                Debug.Log("Trying to remove effect from collection: " + effectZone.EffectData.EffectType + " which is not in collection.");
+            }
+        }
+
+        // If not on player -> add to dictionary and launch damage
+        else
+        {
+            Debug.Log("Trying to remove effect: " + effectZone.EffectData.EffectType + " which is not on player.");
+        }
+    }
+
+
+
 
 
 
@@ -89,14 +115,21 @@ public class PlayerEffectsHandler : MonoBehaviour
 
     bool IsEffectOnPlayer(EffectType type)
     {
-        var effectOnPlayerData = _effectsOnPlayer.FirstOrDefault(i => i.EffectType == type);
-        
-        if (effectOnPlayerData != null)
+        if (_effectsOnPlayer.TryGetValue(type, out var zonesCollection))
         {
-            return true;
+            if (zonesCollection.Count <= 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
-
-        return false;
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -116,10 +149,6 @@ public class PlayerEffectsHandler : MonoBehaviour
         {
             if (data.EnvironmnentType == type)
             {
-                if (data.ParticleObject != null)
-                {
-                    data.ParticleObject?.SetActive(status);
-                }
                 data.Icon.gameObject.SetActive(status);
                 return;
             }
@@ -132,11 +161,6 @@ public class PlayerEffectsHandler : MonoBehaviour
     {
         foreach (var data in _availableEffects)
         {
-            if (data.ParticleObject != null)
-            {
-                data.ParticleObject.SetActive(false);
-            }
-
             data.Icon.gameObject?.SetActive(false);
         }
     }

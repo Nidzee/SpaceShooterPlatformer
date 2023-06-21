@@ -53,7 +53,7 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
                 BasicEffectZone environment = other.gameObject.GetComponent<BasicEffectZone>();
                 if (environment != null)
                 {
-                    _characterController.PlayerEffectsHandler.ApplyEffect(environment.EffectData);
+                    _characterController.PlayerEffectsHandler.ApplyEffect(environment);
                 }
             }
 
@@ -84,7 +84,7 @@ namespace LivingBeings.Player.CharacterMovement.MovementStateMachine
                 BasicEffectZone environment = other.gameObject.GetComponent<BasicEffectZone>();
                 if (environment != null)
                 {
-                    _characterController.PlayerEffectsHandler.RemoveEffect(environment.EffectData);
+                    _characterController.PlayerEffectsHandler.RemoveEffect(environment);
                 }
             }
         }
