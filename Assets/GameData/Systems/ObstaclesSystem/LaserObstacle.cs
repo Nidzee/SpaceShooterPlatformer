@@ -17,6 +17,7 @@ public class LaserObstacle : MonoBehaviour
     [SerializeField] Transform _startPoint;
     [SerializeField] float _maxRayDistance;
     [SerializeField] LayerMask _lazerHitMask; // Defines layers that laser can hit and place line redere
+    [SerializeField] GameObject _laserCollider;
 
     [Header("Visuals")]
     [SerializeField] Transform _startLaser;
@@ -67,9 +68,19 @@ public class LaserObstacle : MonoBehaviour
         {
             _startLaser.gameObject.SetActive(true);
             _finishLaser.gameObject.SetActive(true);
+            _laserCollider.gameObject.SetActive(true);
 
             _startLaser.transform.position = _startPoint.transform.position;
             _finishLaser.transform.position = hit.point;
+
+
+            Vector3 middle = Vector3.Lerp(_startLaser.transform.position, _finishLaser.transform.position, 0.5f);
+            _laserCollider.transform.position = middle;
+            _laserCollider.transform.up = _finishLaser.transform.position - _startLaser.transform.position;
+
+            float distance = Vector3.Distance(_startLaser.transform.position, _finishLaser.transform.position);
+            _laserCollider.transform.localScale = new Vector3(1, distance, 1);
+
 
             _lineRenderer.enabled = true;
             _lineRenderer.SetPosition(0, _startPoint.position);
@@ -87,6 +98,7 @@ public class LaserObstacle : MonoBehaviour
         _lineRenderer.enabled = false;
         _startLaser.gameObject.SetActive(false);
         _finishLaser.gameObject.SetActive(false);
+        _laserCollider.gameObject.SetActive(false);
     }
 
 
