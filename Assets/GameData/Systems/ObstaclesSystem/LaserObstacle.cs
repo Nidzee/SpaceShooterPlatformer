@@ -11,11 +11,12 @@ public enum LaserObstacleType
 
 public class LaserObstacle : MonoBehaviour
 {
+    [Header("Laser obstacle config")]
     [SerializeField] LaserObstacleType _laserType;
-
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] Transform _startPoint;
     [SerializeField] float _maxRayDistance;
+    [SerializeField] LayerMask _lazerHitMask; // Defines layers that laser can hit and place line redere
 
     [Header("Visuals")]
     [SerializeField] Transform _startLaser;
@@ -60,7 +61,7 @@ public class LaserObstacle : MonoBehaviour
     void LaunchRay()
     {
 
-        RaycastHit2D hit = Physics2D.Raycast(_startPoint.position, _startPoint.right, _maxRayDistance);
+        RaycastHit2D hit = Physics2D.Raycast(_startPoint.position, _startPoint.right, _maxRayDistance, _lazerHitMask);
 
         if (hit.collider != null)
         {
@@ -73,6 +74,7 @@ public class LaserObstacle : MonoBehaviour
             _lineRenderer.enabled = true;
             _lineRenderer.SetPosition(0, _startPoint.position);
             _lineRenderer.SetPosition(1, hit.point);
+            GenerateMeshCollider();
         }
         else
         {
@@ -85,5 +87,41 @@ public class LaserObstacle : MonoBehaviour
         _lineRenderer.enabled = false;
         _startLaser.gameObject.SetActive(false);
         _finishLaser.gameObject.SetActive(false);
+    }
+
+
+    public void GenerateMeshCollider()
+    {
+        MeshCollider collider = GetComponent<MeshCollider>();
+
+        if (collider == null)
+        {
+            collider = gameObject.AddComponent<MeshCollider>();
+        }
+
+
+        Mesh mesh = new Mesh();
+        _lineRenderer.BakeMesh(mesh, true);
+
+        // if you need collisions on both sides of the line, simply duplicate & flip facing the other direction!
+        // This can be optimized to improve performance ;)
+        int[] meshIndices = mesh.GetIndices(0);
+        int[] newIndices = new int[meshIndices.Length * 2];
+
+        int j = meshIndices.Length - 1;
+        for (int i = 0; i < meshIndices.Length; i++)
+        {
+            newIndices[i] = meshIndices[i];
+            newIndices[meshIndices.Length + i] = meshIndices[j];
+        }
+        mesh.SetIndices(newIndices, MeshTopology.Triangles, 0);
+
+        collider.sharedMesh = mesh;
+    }
+
+    
+    private bool IsRayCollideSurface(GameObject collidedObject, LayerMask mask)
+    {
+        return ((1 << collidedObject.gameObject.layer) & mask) != 0;
     }
 }
