@@ -10,6 +10,7 @@ TagManager:
   - Bullet
   - Environment
   - Ladder
+  - EffectZone
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Collectibles
   - Interractibles
   - Bullets
-  - 
+  - Boxes
   - 
   - 
   - 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5886812190436959677}
   - component: {fileID: -1705626762209876508}
   m_Layer: 0
-  m_Name: BarrealExplosion
+  m_Name: RocketExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,5 +46,11 @@ MonoBehaviour:
   _sphereRadius: 2
   _lifeTime: 1
   _eplosionDamage: 10
+  _sphereKnockbackRadius: 4
+  _knockbackForce: 4000
+  _knockBackLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   _showExplosionSphere: 1
   _spherePrefab: {fileID: 8364782063587503212, guid: 9c8ad14394e5c2442bffb467a0c4b40f, type: 3}
+  _knockbackSpherePrefab: {fileID: 8364782063587503212, guid: 0823145bd84afb749a3f19d387793d65, type: 3}
