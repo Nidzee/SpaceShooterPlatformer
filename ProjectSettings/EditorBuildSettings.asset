@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/GameData/MetaGameSystems/HubScene.unity
+    guid: 96d69510989a55a43b12d71f5b78e36c
+  - enabled: 1
+    path: Assets/GameData/MetaGameSystems/PopUps/HealthPopUp.unity
+    guid: e66de551091e373408bf6e80d3d3274c
+  - enabled: 1
+    path: Assets/Scenes/TestingGroundScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}

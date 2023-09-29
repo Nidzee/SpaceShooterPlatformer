@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea9c4cb8f4464b448acfdb06c3afbc6a, type: 3}
+  m_Name: UniversalButtonConfigAsset
+  m_EditorClassIdentifier: 
+  _configsList:
+  - ButtonStyle: 0
+    VisualsConfig:
+      Font_Slim: {fileID: 2100000, guid: 2de4eacbfa5f76443bf90882ae6b1169, type: 2}
+      Font_Bold: {fileID: 2100000, guid: 2de4eacbfa5f76443bf90882ae6b1169, type: 2}
+      ButtonSprite: {fileID: 21300000, guid: 599a35ed59d435144a6bb7a98e6fb550, type: 3}
+  - ButtonStyle: 1
+    VisualsConfig:
+      Font_Slim: {fileID: 2100000, guid: 14a512b70af39ec4ba1d516b455b9193, type: 2}
+      Font_Bold: {fileID: 2100000, guid: 14a512b70af39ec4ba1d516b455b9193, type: 2}
+      ButtonSprite: {fileID: 21300000, guid: 570afad144ddc86468acd50a93a847bc, type: 3}
+  - ButtonStyle: 3
+    VisualsConfig:
+      Font_Slim: {fileID: 2100000, guid: 45965dd6b84c523478213cc9fcb2a53f, type: 2}
+      Font_Bold: {fileID: 2100000, guid: 45965dd6b84c523478213cc9fcb2a53f, type: 2}
+      ButtonSprite: {fileID: 21300000, guid: 36daa6407fabc3e4c9b254d25ca074bb, type: 3}
+  - ButtonStyle: 4
+    VisualsConfig:
+      Font_Slim: {fileID: 2100000, guid: 87627c7558f4ace4c97db426e26702d4, type: 2}
+      Font_Bold: {fileID: 2100000, guid: 87627c7558f4ace4c97db426e26702d4, type: 2}
+      ButtonSprite: {fileID: 21300000, guid: efadbbcdd690f4846a2cc9bd8f949fa0, type: 3}
+  - ButtonStyle: 5
+    VisualsConfig:
+      Font_Slim: {fileID: 2100000, guid: 06cc9cc6356c28e4ca543509a701b53e, type: 2}
+      Font_Bold: {fileID: 2100000, guid: 06cc9cc6356c28e4ca543509a701b53e, type: 2}
+      ButtonSprite: {fileID: 21300000, guid: 61d703fa1d7e7e24aa47142bce8a9957, type: 3}
