@@ -14,8 +14,10 @@ public class PlayerSaveData_Weapon
     
     public PlayerSaveData_Weapon GetCopy()
     {
-        PlayerSaveData_Weapon result = new PlayerSaveData_Weapon();
-        result.WeaponsSavesCollection = new List<SingleWeaponSaveData>();
+        PlayerSaveData_Weapon result = new PlayerSaveData_Weapon
+        {
+            WeaponsSavesCollection = new List<SingleWeaponSaveData>()
+        };
 
         foreach (var item in WeaponsSavesCollection)
         {

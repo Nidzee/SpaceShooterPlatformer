@@ -23,27 +23,22 @@ public class ManagersController : MonoBehaviour
     void InitManagers()
     {
         // Read player data
-        PlayerDataManager.Instance.InitManager();
-
-        ArmourDataManager.Instance.InitManager();
-        HealthDataManager.Instance.InitManager();
-        CurrencyDataManager.Instance.InitManager();
+        // Contains actual player data (armour/currency/health/arsenal)
+        PlayerDataManager.Instance.init();
 
 
 
 
-
+        HealthDataManager.Instance.init();
+        ArmourDataManager.Instance.init();
+        CurrencyDataManager.Instance.init();
         WeaponDataManager.Instance.init();
 
 
 
 
 
-
-
-        PlayerDataManager.Instance.ShrinkPlayerData();
-        
         // Temporary
-        UserInterfaceManager.Instance.InitManager();
+        MainMenuScene.Instance.InitManager();
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -12,13 +10,13 @@ public class HealthDataWidget : MonoBehaviour
     [SerializeField] UniversalButton _upgradeButton;
 
 
+
+
+
     public void InitWidget()
     {
         // Set data
         RefreshWidget();
-
-        // Connect signals
-        ConnectSignals();
     }
 
     void RefreshWidget()
@@ -27,7 +25,7 @@ public class HealthDataWidget : MonoBehaviour
         RefreshPurchaseButton();
     }
 
-    void ConnectSignals()
+    public void ConnectSignals()
     {
         // If upgrade pressed -> try to upgrade health
         _upgradeButton.OnClick.AddListener(HealthDataManager.Instance.TryToUpgradeHealth);
@@ -45,7 +43,7 @@ public class HealthDataWidget : MonoBehaviour
     void RefreshActualHealthData()
     {
         // Get actual data
-        PlayerSaveData_Health healthData = PlayerDataManager.Instance.PlayerData.HealthData;
+        PlayerSaveData_Health healthData = HealthDataManager.Instance.GetActualData();
         
         // Set visuals
         _levelLabel.text = healthData.HelathLevel.ToString();
@@ -55,17 +53,6 @@ public class HealthDataWidget : MonoBehaviour
 
     void RefreshPurchaseButton()
     {
-        // Check if top config reached -> disable button to prevent trying to upgrade more than config
-        PlayerSaveData_Health healthData = PlayerDataManager.Instance.PlayerData.HealthData;
-        if (HealthDataManager.Instance.IsTopConfig(healthData))
-        {
-            _upgradeButton.SetLabel("Top reached!");
-            _upgradeButton.BaseButton.enabled = false;
-            return;
-        }
-
-
-
         // Set buton upgrade price
         int upgradePrice = HealthDataManager.Instance.GetUpgradePrice();
         _upgradeButton.SetButtonPrice(upgradePrice);

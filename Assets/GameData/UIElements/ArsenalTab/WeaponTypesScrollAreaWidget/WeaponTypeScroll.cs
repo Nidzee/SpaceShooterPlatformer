@@ -29,10 +29,17 @@ public class WeaponTypeScroll : MonoBehaviour
 
 
 
-
-    public void InitWidget()
+    public void ConnectSignals()
     {
         WeaponDataManager.Instance.OnDataChanged_Weapon.AddListener(RefreshData);
+    }
+
+    public void Activate()
+    {
+        // Destroy all previous widgets
+        foreach (Transform child in _parent) {
+    	    Destroy(child.gameObject);
+        }
 
         _lastSelectedWidget = null;
         _weaponTypeWidgets = new List<WeaponTypeWidget>();
@@ -43,6 +50,8 @@ public class WeaponTypeScroll : MonoBehaviour
 
     void InstantiateAllWidgets()
     {
+
+
         // Get all data about weapons
         var weaponDatas = WeaponDataManager.Instance.GetAllWeaponTypes();
 

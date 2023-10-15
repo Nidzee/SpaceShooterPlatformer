@@ -13,7 +13,6 @@ public class WeaponDataManager : Manager<WeaponDataManager>
     public UnityEvent OnDataChanged_Weapon = new UnityEvent();
     
 
-    // If player data was updated -> check if armour data was updated
 
 
 
@@ -210,7 +209,7 @@ public class WeaponDataManager : Manager<WeaponDataManager>
         }
 
 
-        PlayerDataManager.Instance.UpgradeWepon(newLevelNumber, newStepIndex, 1);
+        PlayerDataManager.Instance.UpgradeWepon(type, newLevelNumber, newStepIndex, 1);
     }
 }
 

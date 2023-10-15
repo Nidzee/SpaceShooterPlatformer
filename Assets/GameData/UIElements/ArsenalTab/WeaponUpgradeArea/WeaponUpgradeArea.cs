@@ -23,10 +23,33 @@ public class WeaponUpgradeArea : MonoBehaviour
 
 
 
-    public void InitWidget()
+    public void ConnectSignals()
     {
-        ConnectSignals();
+        // If upgrade pressed -> try to upgrade armour
+        _weponUpgradeButton.OnClick.AddListener(clickOnUpgradeButton);
+
+        // If armour data was changed -> refresh data and purchase button
+        WeaponDataManager.Instance.OnDataChanged_Weapon.AddListener(RefreshWidgetAfterUpgrade);
     }
+
+    void RefreshWidgetAfterUpgrade()
+    {
+        // We upgrade only this weapon type -> so we need to update this visuals
+        SetWeponData();
+    }
+
+    void clickOnUpgradeButton()
+    {
+        WeaponDataManager.Instance.UpgradeWeaponType(_currentDataUpgrading.WeaponType);
+    }
+
+
+
+
+
+
+
+
 
     public void SetWeaponDataForDisplay(WeaponType_GameData data)
     {
@@ -37,9 +60,8 @@ public class WeaponUpgradeArea : MonoBehaviour
     void SetWeponData()
     {
         // Get player save data about this weapon type
-        var weaponData = PlayerDataManager.Instance.PlayerData.WeaponData;
         SingleWeaponSaveData savedDataAboutThisWeapon = null;
-        foreach (var item in weaponData.WeaponsSavesCollection)
+        foreach (var item in PlayerDataManager.Instance.PlayerData.WeaponData.WeaponsSavesCollection)
         {
             if (item.WeaponType == _currentDataUpgrading.WeaponType)
             {
@@ -87,32 +109,5 @@ public class WeaponUpgradeArea : MonoBehaviour
         var stepData = weaponLevelData.GetStepData(savedStepNumber);
         int upgradeCost = stepData.UpgradeCost;
         _weponUpgradeButton.SetLabel(upgradeCost.ToString());
-    }
-
-
-
-
-
-
-
-    
-    void ConnectSignals()
-    {
-        // If upgrade pressed -> try to upgrade armour
-        _weponUpgradeButton.OnClick.AddListener(clickOnUpgradeButton);
-
-        // If armour data was changed -> refresh data and purchase button
-        WeaponDataManager.Instance.OnDataChanged_Weapon.AddListener(RefreshWidgetAfterUpgrade);
-    }
-
-    void RefreshWidgetAfterUpgrade()
-    {
-        // We upgrade only this weapon type -> so we need to update this visuals
-        SetWeponData();
-    }
-
-    void clickOnUpgradeButton()
-    {
-        WeaponDataManager.Instance.UpgradeWeaponType(_currentDataUpgrading.WeaponType);
     }
 }

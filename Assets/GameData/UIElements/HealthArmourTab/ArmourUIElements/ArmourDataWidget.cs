@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Collections;
-using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
@@ -13,22 +10,12 @@ public class ArmourDataWidget : MonoBehaviour
     [SerializeField] UniversalButton _upgradeButton;
 
 
-    public void InitWidget()
-    {
-        // Set data
-        RefreshWidget();
 
-        // Connect signals
-        ConnectSignals();
-    }
 
-    void RefreshWidget()
-    {
-        RefreshActualArmourData();
-        RefreshPurchaseButton();
-    }
 
-    void ConnectSignals()
+
+
+    public void ConnectSignals()
     {
         // If upgrade pressed -> try to upgrade armour
         _upgradeButton.OnClick.AddListener(ArmourDataManager.Instance.TryToUpgradeArmour);
@@ -43,10 +30,26 @@ public class ArmourDataWidget : MonoBehaviour
 
 
 
+    public void InitWidget()
+    {
+        // Set data
+        RefreshWidget();
+    }
+
+    void RefreshWidget()
+    {
+        RefreshActualArmourData();
+        RefreshPurchaseButton();
+    }
+
+
+
+
+
     void RefreshActualArmourData()
     {
         // Get actual data
-        PlayerSaveData_Armour armourData = PlayerDataManager.Instance.PlayerData.ArmourData;
+        PlayerSaveData_Armour armourData = ArmourDataManager.Instance.GetActualData();
         
         // Set visuals
         _levelLabel.text = armourData.ArmourLevel.ToString();
@@ -56,17 +59,6 @@ public class ArmourDataWidget : MonoBehaviour
 
     void RefreshPurchaseButton()
     {
-        // Check if top config reached -> disable button to prevent trying to upgrade more than config
-        PlayerSaveData_Armour armourData = PlayerDataManager.Instance.PlayerData.ArmourData;
-        if (ArmourDataManager.Instance.IsTopConfig(armourData))
-        {
-            _upgradeButton.SetLabel("Top reached!");
-            _upgradeButton.BaseButton.enabled = false;
-            return;
-        }
-
-
-
         // Set buton upgrade price
         int upgradePrice = ArmourDataManager.Instance.GetUpgradePrice();
         _upgradeButton.SetButtonPrice(upgradePrice);
