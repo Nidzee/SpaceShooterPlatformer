@@ -46,6 +46,12 @@ public class UniversalButton : BasicButton
         _buttonLabel.text = label;
     }
 
+    public void SetStyle(ButtonStyle style)
+    {
+        _buttonStyle = style;
+        ApplyButtonStyle();
+    }
+
 
 
 #if UNITY_EDITOR

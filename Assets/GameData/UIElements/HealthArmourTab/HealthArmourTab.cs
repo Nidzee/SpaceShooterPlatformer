@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthArmourTab : MonoBehaviour, MainMenuSceneTab
@@ -7,6 +5,7 @@ public class HealthArmourTab : MonoBehaviour, MainMenuSceneTab
     [SerializeField] HealthDataWidget _healthWidget;   
     [SerializeField] ArmourDataWidget _armourWidget;
     GameObject MainMenuSceneTab.ThisTabObject => gameObject;
+
 
 
     public void Init()

@@ -156,6 +156,26 @@ public class ArmourDataManager : Manager<ArmourDataManager>
 
 
 
+    public bool IsTopConfig(PlayerSaveData_Armour config)
+    {
+        int topConfigLevel = ArmourSystemDataConfig.ArmourLevelsConfigCollection.Count - 1;
+        if (config.ArmourLevel < topConfigLevel)
+        {
+            return false;
+        }
+
+
+        var levelData = ArmourSystemDataConfig.ArmourLevelsConfigCollection[config.ArmourLevel];
+        int topStepIndex = levelData.StepStatsCollection.Count - 1;
+        if (config.ArmourLevelStep < topStepIndex)
+        {
+            return false;
+        }
+
+
+        return true;
+    }
+
 
 
 

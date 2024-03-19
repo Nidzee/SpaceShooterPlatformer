@@ -45,6 +45,31 @@ public class CurrencyDataManager : Manager<CurrencyDataManager>
 
         return false;
     }
+
+
+    public void AddCurrency(CurrencyType currency, int amount)
+    {
+        if (currency == CurrencyType.None)
+        {
+            Debug.LogWarning("[CUR] Warning! Trying to add unknown currency type.");
+            return;
+        }
+
+
+        PlayerDataManager.Instance.AddCurrency(currency, amount);
+    }
+
+    public void RemoveCurrency(CurrencyType currency, int amount)
+    {
+        if (currency == CurrencyType.None)
+        {
+            Debug.LogWarning("[CUR] Warning! Trying to remove unknown currency type.");
+            return;
+        }
+
+
+        PlayerDataManager.Instance.RemoveCurrency(currency, amount);
+    }
 }
 
 public enum CurrencyType

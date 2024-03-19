@@ -26,7 +26,7 @@ public class PlayerDataManager : Manager<PlayerDataManager>
     {
         PlayerData = new PlayerSaveData
         {
-            CurrencyData = new PlayerSaveData_Currency() { CoinsAmount = 350, CrystalsAmount = 10 },
+            CurrencyData = new PlayerSaveData_Currency() { CoinsAmount = 350000, CrystalsAmount = 1000000 },
             ArmourData = new PlayerSaveData_Armour() { ArmourLevel = 0, ArmourLevelStep = 0 },
             HealthData = new PlayerSaveData_Health() { HelathLevel = 0, HelathLevelStep = 0 },
             WeaponData = new PlayerSaveData_Weapon()
@@ -153,6 +153,51 @@ public class PlayerDataManager : Manager<PlayerDataManager>
 
 
         // Save to backend
+        SavePlayerData();
+        OnDataChanged.Invoke();
+    }
+
+
+
+
+
+
+
+    // Currency manipulations
+    public void AddCurrency(CurrencyType type, int amount)
+    {
+        if (type == CurrencyType.Coins)
+        {
+            PlayerData.CurrencyData.CoinsAmount += amount;
+        } 
+        else
+        {
+            PlayerData.CurrencyData.CrystalsAmount += amount;
+        }
+
+        SavePlayerData();
+        OnDataChanged.Invoke();
+    }
+    
+    public void RemoveCurrency(CurrencyType type, int amount)
+    {
+        if (type == CurrencyType.Coins)
+        {
+            PlayerData.CurrencyData.CoinsAmount -= amount;
+            if (PlayerData.CurrencyData.CoinsAmount < 0)
+            {
+                PlayerData.CurrencyData.CoinsAmount = 0;
+            }
+        } 
+        else
+        {
+            PlayerData.CurrencyData.CrystalsAmount -= amount;
+            if (PlayerData.CurrencyData.CrystalsAmount < 0)
+            {
+                PlayerData.CurrencyData.CrystalsAmount = 0;
+            }
+        }
+
         SavePlayerData();
         OnDataChanged.Invoke();
     }

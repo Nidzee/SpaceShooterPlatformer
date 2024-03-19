@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine;
 
 public class HealthDataManager : Manager<HealthDataManager>
 {
@@ -39,6 +37,26 @@ public class HealthDataManager : Manager<HealthDataManager>
     public PlayerSaveData_Health GetActualData()
     {
         return _healthSaveDataCopy;
+    }
+
+    public bool IsTopConfig(PlayerSaveData_Health config)
+    {
+        int topConfigLevel = HealthSystemDataConfig.HealthLevelsConfigCollection.Count - 1;
+        if (config.HelathLevel < topConfigLevel)
+        {
+            return false;
+        }
+
+
+        var levelData = HealthSystemDataConfig.HealthLevelsConfigCollection[config.HelathLevel];
+        int topStepIndex = levelData.StepStatsCollection.Count - 1;
+        if (config.HelathLevelStep < topStepIndex)
+        {
+            return false;
+        }
+
+
+        return true;
     }
 
     public HealthStepStats GetHealthStepStats(PlayerSaveData_Health data)
